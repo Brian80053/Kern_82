@@ -1,0 +1,17 @@
+PROZEDUR output(GANZ x)
+BEGIN
+    IF x == 0 THEN
+    BEGIN
+        RÜCKGABE;
+    END
+    AUSGABE(x);
+    output(x-1);
+
+END
+
+PROZEDUR main()
+BEGIN
+    GANZ x = 0;
+    LESEN(x);
+    output(x);  
+END

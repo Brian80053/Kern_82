@@ -1,0 +1,56 @@
+TYP Meter = GANZ;
+TYP ENUM Status
+BEGIN
+    AUS = 0,
+    BEREIT = 4,
+    AKTIV,
+    START = 5
+END
+
+TYP STRUCT Punkt
+BEGIN
+    Meter x;
+    Meter y;
+END
+
+TYP STRUCT Konto
+BEGIN
+    PRIVATE
+        LANG saldo;
+    PUBLIC
+        PROZEDUR einzahlen(LANG betrag)
+        BEGIN
+            saldo = saldo + betrag;
+        END
+        FUNKTION LANG stand()
+        BEGIN
+            RÜCKGABE saldo;
+        END
+END
+
+PROZEDUR main()
+BEGIN
+    KETTE s[8] = "ABC";
+    s[3] = 'D';
+    s[4] = 'E';
+    AUSGABE(s);
+
+    Punkt a;
+    Punkt b;
+    a.x = 10;
+    a.y = 20;
+    b = a;
+    AUSGABE(b.x + b.y);
+
+    Konto k;
+    k.einzahlen(100);
+    AUSGABE(k.stand());
+
+    Status status = BEREIT;
+    SWITCH status
+    BEGIN
+        CASE BEREIT: AUSGABE("BEREIT");
+        CASE AKTIV: AUSGABE("AKTIV");
+        DEFAULT: AUSGABE("AUS");
+    END
+END

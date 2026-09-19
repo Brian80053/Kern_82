@@ -1,0 +1,17 @@
+FUNKTION GANZ factorial(GANZ x)
+BEGIN
+    IF x == 1 THEN
+    BEGIN
+        RÜCKGABE 1;
+    END
+    RÜCKGABE x*factorial(x-1);
+
+END
+
+PROZEDUR main()
+BEGIN
+    GANZ x = 0;
+    LESEN(x);
+    GANZ y = factorial(x);
+    AUSGABE(y);  
+END

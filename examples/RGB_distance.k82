@@ -1,0 +1,42 @@
+/* RGB Distance 1149 */
+TYP STRUCT RGB
+BEGIN
+    LANG RED;
+    LANG GREEN;
+    LANG BLUE;
+END
+FUNKTION LANG min(LANG A,LANG B)
+BEGIN
+    IF A <= B THEN
+    BEGIN
+        RÜCKGABE A;
+    END
+    ELSE
+    BEGIN
+        RÜCKGABE B;
+    END
+END
+PROZEDUR main()
+BEGIN
+    RGB arr[1001];
+    RGB DP[1002];
+    LANG x;
+    LESEN(x);
+    LANG i;
+    FOR(i=0; i<x; i++)
+    BEGIN
+        LESEN(arr[i].RED);
+        LESEN(arr[i].GREEN);
+        LESEN(arr[i].BLUE);
+    END
+    DP[0].RED = arr[0].RED;
+    DP[0].GREEN = arr[0].GREEN;
+    DP[0].BLUE = arr[0].BLUE;
+    FOR(i=1; i<x; i++)
+    BEGIN
+        DP[i].RED = min(DP[i-1].GREEN+arr[i].RED,DP[i-1].BLUE+arr[i].RED);
+        DP[i].GREEN = min(DP[i-1].RED+arr[i].GREEN,DP[i-1].BLUE+arr[i].GREEN);
+        DP[i].BLUE = min(DP[i-1].GREEN+arr[i].BLUE,DP[i-1].RED+arr[i].BLUE);        
+    END
+    AUSGABE(min(min(DP[x-1].RED,DP[x-1].GREEN),DP[x-1].BLUE));
+END

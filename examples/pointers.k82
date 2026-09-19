@@ -1,0 +1,21 @@
+ZEIGER GANZ global = NULL;
+FUNKTION ZEIGER GANZ identity(ZEIGER GANZ p) BEGIN RÜCKGABE p; END
+PROZEDUR main()
+BEGIN
+
+GANZ x = 10;
+ZEIGER GANZ p = ADDRESSE(x);
+AUSGABE(INHALT(p));
+INHALT(p) = 20; AUSGABE(x);
+x = 33; ZEIGER GANZ q = p; AUSGABE(INHALT(q));
+KONST ZEIGER GANZ fixed = ADDRESSE(x);
+INHALT(fixed) = 40;
+ZEIGER ZEIGER GANZ pp = ADDRESSE(p);
+INHALT(pp) = q;
+LESEN(INHALT(p)); ++INHALT(p); AUSGABE(x);
+p = NULL; p = identity(ADDRESSE(x)); global = p;
+ZEIGER GANZ values[2][2]; values[1][1] = global;
+KONST ZEIGER GANZ empty[2];
+AUSGABE(INHALT(values[1][1]));
+p = identity(NULL);
+END

@@ -1,0 +1,13 @@
+PROZEDUR main()
+BEGIN
+    LANG dp[20];
+    dp[0] = 0;
+    dp[1] = 1;
+
+    FOR (GANZ i = 2; i < 20; i++)
+    BEGIN
+        dp[i] = dp[i - 1] + dp[i - 2];
+    END
+
+    AUSGABE(dp[19]);
+END

@@ -1,0 +1,6 @@
+IMPORT Mathematik;
+
+PROZEDUR main()
+BEGIN
+    AUSGABE(add(2, 3));
+END

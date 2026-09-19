@@ -1,0 +1,20 @@
+PROZEDUR main()
+BEGIN
+    GANZ x = 0;
+    LESEN(x);
+    FOR (GANZ i = 0; i < x; i++)
+    BEGIN
+        FOR (GANZ j = 0; j < 2 * x -1; j++)
+        BEGIN
+            IF j >= x-1-i AND j <= x-1+i THEN
+            BEGIN
+                SCHREIBEN("*");
+            END
+            ELSE
+            BEGIN
+                SCHREIBEN(" ");
+            END
+        END
+        AUSGABE("");
+    END
+END

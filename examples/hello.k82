@@ -1,0 +1,4 @@
+PROZEDUR main()
+BEGIN
+    SCHREIBEN("Hallo, Welt!");
+END

@@ -1,0 +1,22 @@
+TYP ENUM Code
+BEGIN
+    SMALL = 20,
+    BIG = 100000
+END
+
+TYP STRUCT Matrix
+BEGIN
+    GANZ data[2][3];
+END
+
+PROZEDUR main()
+BEGIN
+    Matrix matrix;
+    GANZ cube[2][3][4];
+    matrix.data[1][2] = 42;
+    cube[1][2][3] = 77;
+    AUSGABE(matrix.data[1][2]);
+    AUSGABE(cube[1][2][3]);
+    AUSGABE(GANZ(SMALL));
+    AUSGABE(LANG(BIG));
+END

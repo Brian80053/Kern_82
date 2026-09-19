@@ -1,0 +1,42 @@
+cabal-version: 2.4
+name: kern82
+version: 1.0.0.0
+synopsis: Kern 82 checked C99 compiler prototype
+license: BSD-3-Clause
+build-type: Simple
+
+common compiler-options
+  hs-source-dirs: app, src
+  other-modules:
+    Kern82.Charset
+    Kern82.AST
+    Kern82.Lexer
+    Kern82.Parser
+    Kern82.Semantic
+    Kern82.TypeCheck
+    Kern82.ConstEval
+    Kern82.Types
+    Kern82.Flow
+    Kern82.Runtime
+    Kern82.Codegen
+    Kern82.Compiler
+    Kern82.Modules
+    Kern82.Generics
+    Paths_kern82
+  autogen-modules: Paths_kern82
+  build-depends:
+    base >= 4.14 && < 5,
+    containers >= 0.6 && < 0.8,
+    directory >= 1.3 && < 1.4,
+    filepath >= 1.4 && < 1.6,
+    process >= 1.6 && < 1.7
+  default-language: Haskell2010
+  ghc-options: -Wall -O2
+
+executable kern
+  import: compiler-options
+  main-is: Main.hs
+
+executable kern82
+  import: compiler-options
+  main-is: Main.hs

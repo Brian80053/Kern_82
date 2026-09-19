@@ -1,0 +1,9 @@
+TYP STRUCT Daten BEGIN GANZ values[3]; END
+PROZEDUR bearbeiten(REFERENZ Daten d) BEGIN d.values[0] = 10; END
+PROZEDUR main()
+BEGIN
+ GANZ a = 10; GANZ b = 20; REFERENZ GANZ r = a;
+ r = b; SCHREIBEN(a, " ");
+ ZEIGER GANZ p = ADDRESSE(r); INHALT(p) = 30; SCHREIBEN(a, " ");
+ Daten d; bearbeiten(d); AUSGABE(d.values[0]);
+END

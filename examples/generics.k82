@@ -1,0 +1,31 @@
+GENERISCH T GEORDNET
+FUNKTION T minimum(T a, T b)
+BEGIN
+    IF a < b THEN BEGIN RÜCKGABE a; END
+    ELSE BEGIN RÜCKGABE b; END
+END
+
+GENERISCH T
+PROZEDUR tausche(REFERENZ T a, REFERENZ T b)
+BEGIN
+    T temp = a;
+    a = b;
+    b = temp;
+END
+
+FUNKTION GANZ minGanz = NEU minimum(GANZ);
+FUNKTION LANG minLang = NEU minimum(LANG);
+FUNKTION GLEIT minGleit = NEU minimum(GLEIT);
+PROZEDUR tauscheGanz = NEU tausche(GANZ);
+
+PROZEDUR main()
+BEGIN
+    AUSGABE(minGanz(10, 20));
+    AUSGABE(minLang(40000, 50000));
+    AUSGABE(minGleit(1.5, 2.5));
+    GANZ a = 3;
+    GANZ b = 7;
+    tauscheGanz(a, b);
+    ZEIGER FUNKTION GANZ(GANZ, GANZ) f = ADDRESSE(minGanz);
+    AUSGABE(a, " ", b, " ", f(a, b));
+END

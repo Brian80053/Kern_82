@@ -1,0 +1,21 @@
+PROZEDUR main()
+BEGIN
+    KONST KETTE title[7] = "Kern 82";
+    KETTE name[16] = "Hallo";
+    name[0] = 'h';
+    AUSGABE(title, ": ", name);
+
+    KONST GANZ values[3];
+    AUSGABE(values[0]);
+
+    SWITCH name[0]
+    BEGIN
+        CASE 'h':
+            AUSGABE("case h");
+            FALLTHROUGH;
+        CASE 'H':
+            AUSGABE("next case");
+        DEFAULT:
+            AUSGABE("other");
+    END
+END

@@ -1,0 +1,18 @@
+TYP STRUCT Punkt BEGIN GANZ x; GANZ y; END
+PROZEDUR main()
+BEGIN
+ FREIGEBEN(NULL);
+ ZEIGER GANZ p = ALLOKIEREN(3);
+ AUSGABE(INHALT(p), " ", INHALT(p + 1), " ", INHALT(p + 2));
+ INHALT(p + 1) = 42;
+ ZEIGER GANZ q = 1 + p;
+ LANG d = (p + 2) - p;
+ AUSGABE(INHALT(q), " ", d - 1, " ", d);
+ FREIGEBEN(p);
+ ZEIGER Punkt point = ALLOKIEREN(1);
+ INHALT(point).x = 10; INHALT(point).y = 20;
+ AUSGABE(INHALT(point).x, " ", INHALT(point).y);
+ FREIGEBEN(point);
+ ZEIGER ZEIGER GANZ table = ALLOKIEREN(2);
+ FREIGEBEN(table);
+END

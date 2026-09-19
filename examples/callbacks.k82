@@ -1,0 +1,13 @@
+TYP STRUCT Handler
+BEGIN
+    ZEIGER PROZEDUR(REFERENZ GANZ) callback;
+END
+PROZEDUR erhoehen(REFERENZ GANZ x) BEGIN x = x + 1; END
+PROZEDUR main()
+BEGIN
+    Handler h;
+    GANZ x = 4;
+    h.callback = ADDRESSE(erhoehen);
+    h.callback(x);
+    AUSGABE(x);
+END

@@ -1,0 +1,13 @@
+MODUL Mathematik
+
+EXPORT FUNKTION GANZ add(GANZ a, GANZ b);
+
+FUNKTION GANZ helper(GANZ x)
+BEGIN
+    RÜCKGABE x;
+END
+
+FUNKTION GANZ add(GANZ a, GANZ b)
+BEGIN
+    RÜCKGABE helper(a) + helper(b);
+END

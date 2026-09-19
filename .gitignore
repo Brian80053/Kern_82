@@ -1,0 +1,29 @@
+# Local compiler, test and scratch output
+/build/
+tests/
+.vscode/
+/dist-newstyle/
+/.build-*/
+/.tmp*/
+*.hi
+*.o
+*.dyn_hi
+*.dyn_o
+*.obj
+*.c
+*.exe
+
+# Intentionally retained reference outputs and release binaries
+!/examples/generated/*.c
+!/bin/kern82.exe
+!/bin/kern.exe
+/bin/kern
+/bin/kern82
+!/bin/examples/*.exe
+
+# Editor and Python temporary files
+*~
+*.swp
+*.swo
+__pycache__/
+*.py[cod]

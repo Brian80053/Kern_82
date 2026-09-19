@@ -1,0 +1,122 @@
+MODUL MATHEMATIK
+
+EXPORT FUNKTION GANZ minGanz(GANZ a, GANZ b);
+EXPORT FUNKTION LANG minLang(LANG a, LANG b);
+EXPORT FUNKTION GLEIT minGleit(GLEIT a, GLEIT b);
+EXPORT FUNKTION GANZ maxGanz(GANZ a, GANZ b);
+EXPORT FUNKTION LANG maxLang(LANG a, LANG b);
+EXPORT FUNKTION GLEIT maxGleit(GLEIT a, GLEIT b);
+EXPORT FUNKTION GANZ clampGanz(GANZ x, GANZ upper, GANZ under);
+EXPORT FUNKTION LANG clampLang(LANG x, LANG upper, LANG under);
+EXPORT FUNKTION GLEIT clampGleit(GLEIT x, GLEIT upper, GLEIT under);
+EXPORT FUNKTION GANZ absGanz(GANZ x);
+EXPORT FUNKTION LANG absLang(LANG x);
+EXPORT FUNKTION GLEIT absGleit(GLEIT x);
+EXPORT FUNKTION GANZ signGanz(GANZ x);
+EXPORT FUNKTION LANG signLang(LANG x);
+EXPORT FUNKTION GLEIT signGleit(GLEIT x);
+
+/* Minimum */
+GENERISCH T GEORDNET
+
+FUNKTION T minimum(T a,T b)
+BEGIN
+    IF a<=b THEN
+    BEGIN
+        RÜCKGABE a;
+    END
+    ELSE
+    BEGIN
+        RÜCKGABE b;
+    END
+END
+
+FUNKTION minGanz = NEU minimum(GANZ);
+FUNKTION minLang = NEU minimum(LANG);
+FUNKTION minGleit = NEU minimum(GLEIT);
+
+/* Maximum */
+GENERISCH T GEORDNET
+
+FUNKTION T maximum(T a,T b)
+BEGIN
+    IF a>=b THEN
+    BEGIN
+        RÜCKGABE a;
+    END
+    ELSE
+    BEGIN
+        RÜCKGABE b;
+    END
+END
+
+FUNKTION maxGanz = NEU maximum(GANZ);
+FUNKTION maxLang = NEU maximum(LANG);
+FUNKTION maxGleit = NEU maximum(GLEIT);
+
+/* Clamp */
+GENERISCH T GEORDNET
+
+FUNKTION T clamp(T x, T under, T upper)
+BEGIN
+    IF x < under THEN
+    BEGIN
+        RÜCKGABE under;
+    END
+    ELSE IF x > upper THEN
+    BEGIN
+        RÜCKGABE upper;
+    END
+    ELSE
+    BEGIN
+        RÜCKGABE x;
+    END
+END
+
+FUNKTION clampGanz = NEU clamp(GANZ);
+FUNKTION clampLang = NEU clamp(LANG);
+FUNKTION clampGleit = NEU clamp(GLEIT);
+
+/* Abs */
+GENERISCH T NUMERISCH
+
+FUNKTION T abs(T x)
+BEGIN
+    IF x < 0 THEN
+    BEGIN
+        RÜCKGABE -x;
+    END
+    ELSE
+    BEGIN
+        RÜCKGABE x;
+    END
+END
+
+FUNKTION absGanz = NEU abs(GANZ);
+FUNKTION absLang = NEU abs(LANG);
+FUNKTION absGleit = NEU abs(GLEIT);
+
+/* Sign */
+
+GENERISCH T NUMERISCH
+
+FUNKTION T sign(T x)
+BEGIN
+    IF x < 0 THEN
+    BEGIN
+        RÜCKGABE -1;
+    END
+    ELSE IF x == 0 THEN
+    BEGIN
+        RÜCKGABE 0;
+    END
+    ELSE
+    BEGIN
+        RÜCKGABE 1;
+    END
+END
+
+FUNKTION signGanz = NEU sign(GANZ);
+FUNKTION signLang = NEU sign(LANG);
+FUNKTION signGleit = NEU sign(GLEIT);
+

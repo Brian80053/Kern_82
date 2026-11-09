@@ -320,19 +320,24 @@ genReadArg result a
         _ -> do
           (before,target) <- genLValue a
           pure (before,\value -> target ++ " = " ++ value ++ ";")
-      token <- fresh
       let ty = checkedType a
-          parameters = token ++ ", " ++ position a ++ ")"
-          value = case representation ty of
-            BoolT -> "k_parse_bool(" ++ parameters
-            Gleit -> "k_parse_float(" ++ parameters
-            CharT -> "k_parse_char(" ++ parameters
-            _ -> "(" ++ ctype ty ++ ")k_parse_int(" ++ token ++ ", " ++ bounds ty ++ ", " ++ position a ++ ")"
-      pure (pre ++
-        [ "const char *" ++ token ++ " = k_token(" ++ position a ++ ");"
-        , result ++ " = " ++ token ++ " != NULL;"
-        , "if (" ++ result ++ ")"
-        ] ++ braces [store value])
+      (readInput,value) <- case representation ty of
+        CharT -> do
+          character <- fresh
+          pure ([ "uint8_t " ++ character ++ ";"
+                , result ++ " = k_read_char(&" ++ character ++ ", " ++ position a ++ ");"
+                ], character)
+        base -> do
+          token <- fresh
+          let parameters = token ++ ", " ++ position a ++ ")"
+              parsed = case base of
+                BoolT -> "k_parse_bool(" ++ parameters
+                Gleit -> "k_parse_float(" ++ parameters
+                _ -> "(" ++ ctype ty ++ ")k_parse_int(" ++ token ++ ", " ++ bounds ty ++ ", " ++ position a ++ ")"
+          pure ([ "const char *" ++ token ++ " = k_token(" ++ position a ++ ");"
+                , result ++ " = " ++ token ++ " != NULL;"
+                ], parsed)
+      pure (pre ++ readInput ++ ["if (" ++ result ++ ")"] ++ braces [store value])
 
 genDecl :: Bool -> Decl -> Gen [String]
 genDecl global (Decl b ini) = do

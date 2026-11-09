@@ -127,7 +127,13 @@ genAddress e = case exprNode e of
 -- Capture the receiver and index once, validate before RHS, then validate and
 -- store/append atomically with respect to the source language after RHS effects.
 genKetteStore :: Expr -> Expr -> Gen ([String],String) -> Gen ([String],String)
-genKetteStore whole array rhs = case exprNode whole of
+genKetteStore whole array rhs = do
+  (pre,store) <- genKetteWrite whole array
+  (rightPre,value) <- rhs
+  temporary CharT (pre ++ rightPre) (store value)
+
+genKetteWrite :: Expr -> Expr -> Gen ([String],String -> String)
+genKetteWrite whole array = case exprNode whole of
   ArrayAccess _ index -> do
     (basePre,target) <- genLValue array
     pointer <- fresh
@@ -135,9 +141,8 @@ genKetteStore whole array rhs = case exprNode whole of
     let capacity = case checkedType array of KetteT n -> show n; _ -> error "internal KETTE store"
         pointerDecl = ctype (checkedType array) ++ " *" ++ pointer ++ " = &(" ++ target ++ ");"
         check = "(void)k_kette_write_index((int64_t)" ++ ix ++ ", " ++ pointer ++ "->length, " ++ capacity ++ ", " ++ position whole ++ ");"
-    (rightPre,value) <- rhs
-    temporary CharT (basePre ++ [pointerDecl] ++ indexPre ++ [check] ++ rightPre)
-      ("k_kette_store(" ++ pointer ++ "->data, &" ++ pointer ++ "->length, " ++ capacity ++
+    pure (basePre ++ [pointerDecl] ++ indexPre ++ [check],
+      \value -> "k_kette_store(" ++ pointer ++ "->data, &" ++ pointer ++ "->length, " ++ capacity ++
        ", (int64_t)" ++ ix ++ ", " ++ value ++ ", " ++ position whole ++ ")")
   _ -> error "internal: KETTE store requires an index"
 
@@ -254,8 +259,10 @@ genExpr e = case exprNode e of
           | otherwise = checked t e ("(int64_t)" ++ v ++ " " ++ op ++ " (int64_t)" ++ w)
     temp (a++b) value
   Call "LESEN" args -> do
-    inputOperations <- mapM genReadArg args
-    pure (concatMap (\(pre,statement) -> pre ++ [statement]) inputOperations, "")
+    result <- fresh
+    inputOperations <- mapM (genReadArg result) args
+    let readIfSuccessful statements = ["if (" ++ result ++ ")"] ++ braces statements
+    pure (["bool " ++ result ++ " = true;"] ++ concatMap readIfSuccessful inputOperations, result)
   Call name args | name `elem` ["AUSGABE","SCHREIBEN"] -> do
     values <- mapM genExpr args
     let prefix = concatMap fst values
@@ -299,21 +306,33 @@ genExpr e = case exprNode e of
       KetteT _ -> "k_write_bytes(" ++ v ++ ".data, " ++ v ++ ".length);"
       _ -> error "internal: unsupported output type"
 
-genReadArg :: Expr -> Gen ([String],String)
-genReadArg a | ArrayAccess base _ <- exprNode a, KetteT _ <- checkedType base = do
-  (pre,value) <- genKetteStore a base (temporary CharT [] ("k_read_char(" ++ position a ++ ")"))
-  pure (pre,"(void)" ++ value ++ ";")
-genReadArg a = do
-  (pre,target) <- genLValue a
-  let value = case representation (checkedType a) of
-        BoolT -> "k_read_bool(" ++ position a ++ ")"
-        Gleit -> "k_read_float(" ++ position a ++ ")"
-        CharT -> "k_read_char(" ++ position a ++ ")"
-        ty -> "(" ++ ctype ty ++ ")k_read_int(" ++ bounds ty ++ ", " ++ position a ++ ")"
-  case checkedType a of
-    KetteT capacity -> pure (pre,"k_read_kette(" ++ target ++ ".data, " ++ show capacity ++
-      ", &" ++ target ++ ".length, " ++ position a ++ ");")
-    _ -> pure (pre,target ++ " = " ++ value ++ ";")
+genReadArg :: String -> Expr -> Gen [String]
+genReadArg result a
+  | KetteT capacity <- checkedType a = do
+      (pre,target) <- genLValue a
+      pure (pre ++ [result ++ " = k_read_kette(" ++ target ++ ".data, " ++ show capacity ++
+        ", &" ++ target ++ ".length, " ++ position a ++ ");"])
+  | otherwise = do
+      (pre,store) <- case exprNode a of
+        ArrayAccess base _ | KetteT _ <- checkedType base -> do
+          (before,write) <- genKetteWrite a base
+          pure (before,\value -> "(void)" ++ write value ++ ";")
+        _ -> do
+          (before,target) <- genLValue a
+          pure (before,\value -> target ++ " = " ++ value ++ ";")
+      token <- fresh
+      let ty = checkedType a
+          parameters = token ++ ", " ++ position a ++ ")"
+          value = case representation ty of
+            BoolT -> "k_parse_bool(" ++ parameters
+            Gleit -> "k_parse_float(" ++ parameters
+            CharT -> "k_parse_char(" ++ parameters
+            _ -> "(" ++ ctype ty ++ ")k_parse_int(" ++ token ++ ", " ++ bounds ty ++ ", " ++ position a ++ ")"
+      pure (pre ++
+        [ "const char *" ++ token ++ " = k_token(" ++ position a ++ ");"
+        , result ++ " = " ++ token ++ " != NULL;"
+        , "if (" ++ result ++ ")"
+        ] ++ braces [store value])
 
 genDecl :: Bool -> Decl -> Gen [String]
 genDecl global (Decl b ini) = do

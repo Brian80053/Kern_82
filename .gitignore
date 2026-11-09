@@ -20,6 +20,15 @@ tests/
 /bin/kern
 /bin/kern82
 !/bin/examples/*.exe
+CHANGE_REPORT*.md
+CLI.md
+COMPLETE_DELIVERY.md
+TEST_RESULTS*.md
+generics.md
+REPOSITORY_LAYOUT.md
+/docs/README.md
+/docs/00_README.md
+
 
 # Editor and Python temporary files
 *~

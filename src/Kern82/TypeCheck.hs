@@ -379,7 +379,7 @@ checkExpr sigs wanted e = do
         when (any (isPointer . checkedType) as) $ err "LESEN does not accept pointer values; use INHALT"
         when (any (\a -> isStruct (checkedType a) || isEnum (checkedType a)) as) $
           err "LESEN does not accept STRUCT or ENUM values"
-        finish Unit (Call "LESEN" as)
+        finish BoolT (Call "LESEN" as)
       Call name args -> case M.lookup name (routines sigs) of
         Nothing -> err ("unknown routine: " ++ name)
         Just r -> do
